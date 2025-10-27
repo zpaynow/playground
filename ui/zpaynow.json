@@ -1,0 +1,67 @@
+{
+    "amount": 2000,
+    "chains": [
+        {
+            "type": "evm",
+            "commission": 5,
+            "commission_max": 100,
+            "commission_min": 50,
+            "estimation": 60,
+            "name": "Base",
+            "tokens": {
+                "USDC": {
+                    "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                    "identity": "Base:USDC",
+                    "name": "USDC"
+                }
+            }
+        },
+        {
+            "type": "evm",
+            "commission": 5,
+            "commission_max": 200,
+            "commission_min": 50,
+            "estimation": 12,
+            "name": "Sepolia",
+            "tokens": {
+                "USDS": {
+                    "address": "0x0dE254a722BD16C2E647B444C448D2a911deb8d5",
+                    "identity": "Sepolia:USDS",
+                    "name": "USDS"
+                }
+            }
+        },
+        {
+            "type": "evm",
+            "commission": 5,
+            "commission_max": 200,
+            "commission_min": 50,
+            "estimation": 60,
+            "name": "Ethereum",
+            "tokens": {
+                "DAI": {
+                    "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                    "identity": "Ethereum:DAI",
+                    "name": "DAI"
+                },
+                "USDC": {
+                    "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                    "identity": "Ethereum:USDC",
+                    "name": "USDC"
+                },
+                "USDT": {
+                    "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+                    "identity": "Ethereum:USDT",
+                    "name": "USDT"
+                }
+            }
+        }
+    ],
+    "completed": false,
+    "customer": "hi@neosun.me",
+    "expired": "2025-10-28T05:32:03.279173",
+    "merchant": "M:0x58c67330ab1b9a26897e5357ee4d92e6ef631bb4",
+    "pay_eth": "0xb6eA9c248A126634bC5cF98a8F8E77DE0924F2DE",
+    "session_id": 1,
+    "session_url": "https://zpaynow.com/sessions/1"
+}
