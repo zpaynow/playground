@@ -59,8 +59,8 @@ async fn main() {
         .route("/products", post(buy_product))
         .route("/sessions/{id}", get(fetch_session))
         .route("/webhook", post(webhook))
-        //.route("/x402/requirements", get(x402_requirements))
-        //.route("/x402/payments", post(x402_payment))
+        .route("/x402/requirements", post(x402_requirements))
+        .route("/x402/payments", post(x402_payment))
         //.route("/x402/support", get(x402_support))
         //.route("/x402/discovery", get(x402_discovery))
         .with_state(app_state)
@@ -120,6 +120,49 @@ async fn fetch_session(State(app): State<Arc<AppState>>, Path(id): Path<i32>) ->
     }
 }
 
-async fn webhook(State(app): State<Arc<AppState>>) -> Json<Value> {
-    Json(json!({ "error": "netowkr error" }))
+async fn webhook() -> Json<Value> {
+    Json(json!({ "status": "success" }))
+}
+
+async fn x402_requirements(State(app): State<Arc<AppState>>, Json(form): Json<BuyForm>) -> Json<Value> {
+    let price = if let Some(price) = app.products.get(&form.product) {
+        *price
+    } else {
+        return Json(json!({ "errorReason": "no product" }));
+    };
+
+    let data = json!({
+        "customer": form.email,
+        "amount": price,
+    });
+
+    let client = reqwest::Client::new();
+    let url = format!("{}/x402/requirements?apikey={}", app.zp, app.apikey);
+    match client.post(url).json(&data).send().await {
+        Ok(res) => match res.json().await {
+            Ok(res) => Json(res),
+            Err(_) => Json(json!({ "errorReason": "response error" })),
+        },
+        Err(_) => Json(json!({ "errorReason": "netowkr error" })),
+    }
+}
+
+async fn x402_payment(State(app): State<Arc<AppState>>, data: String) -> Json<Value> {
+    let value: Value = if let Ok(value) = serde_json::from_str(&data) {
+        value
+    } else {
+        return Json(json!({ "errorReason": "invalid data" }));
+    };
+
+    let client = reqwest::Client::new();
+    let url = format!("{}/x402/payments?apikey={}", app.zp, app.apikey);
+    match client.post(url).json(&value).send().await {
+        Ok(res) => {
+            match res.json().await {
+                Ok(res) => Json(res),
+                Err(_) => Json(json!({ "errorReason": "response error" })),
+            }
+        },
+        Err(_) => Json(json!({ "errorReason": "netowkr error" })),
+    }
 }

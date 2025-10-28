@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EIP-8004 - ZPayNow Playground</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0ea5a4',
+                        accent: '#14b8a6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Roboto Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .glassmorphism {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .transition-smooth {
+            transition: all 0.2s ease-in-out;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569;
+        }
+
+        .nav-item {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .nav-item:hover {
+            transform: translateX(4px);
+        }
+
+        .card-hover {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        .section-tab {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .section-tab.active {
+            border-bottom: 2px solid #0ea5a4;
+            color: #0ea5a4;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 transition-smooth">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed left-0 top-0 h-screen w-60 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 z-40 transition-transform duration-300">
+        <div class="flex flex-col h-full">
+            <!-- Logo -->
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-slate-800 dark:text-white">ZPayNow</h1>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Playground</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 p-4 space-y-2">
+                <a href="index.html" class="nav-item flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg font-medium">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                    </svg>
+                    <span>Payment</span>
+                </a>
+                <a href="x402.html" class="nav-item flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg font-medium">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <span>x402</span>
+                </a>
+                <a href="8004.html" class="nav-item flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary rounded-lg font-medium">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.944 17.97L4.58 13.62 11.943 24l7.37-10.38-7.372 4.35h.003zM12.056 0L4.69 12.223l7.365 4.354 7.365-4.35L12.056 0z"/>
+                    </svg>
+                    <span>EIP-8004</span>
+                </a>
+                <a href="https://faucet.zpaynow.com" target="_blank" rel="noopener noreferrer" class="nav-item flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg font-medium">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span>USDS</span>
+                    <svg class="w-4 h-4 ml-auto opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                </a>
+                <a href="https://github.com/zpaynow/playground" target="_blank" rel="noopener noreferrer" class="nav-item flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg font-medium">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Code</span>
+                    <svg class="w-4 h-4 ml-auto opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                </a>
+            </nav>
+
+            <!-- Footer -->
+            <div class="p-4 border-t border-slate-200 dark:border-slate-700">
+                <p class="text-xs text-slate-500 dark:text-slate-400 text-center">
+                    v1.0.0 Beta
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="ml-60 transition-all duration-300" id="main-content">
+        <!-- Top Bar -->
+        <header class="fixed top-0 right-0 left-60 h-16 bg-white/80 dark:bg-slate-800/80 glassmorphism border-b border-slate-200 dark:border-slate-700 z-30 transition-all duration-300" id="topbar">
+            <div class="h-full px-6 flex items-center justify-between">
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="lg:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+
+                <div class="flex-1"></div>
+
+                <!-- Right Side Controls -->
+                <div class="flex items-center gap-4">
+                    <!-- Wallet Status -->
+                    <div id="wallet-status" class="hidden items-center gap-2 px-4 py-2 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg border border-green-200 dark:border-green-800">
+                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span id="wallet-address" class="text-sm font-medium">0x...0000</span>
+                    </div>
+
+                    <!-- Connect Wallet Button -->
+                    <button id="connect-wallet-btn" onclick="connectWallet()" class="px-5 py-2 bg-gradient-to-r from-primary to-accent text-white rounded-lg font-medium hover:shadow-lg transition-smooth">
+                        Connect Wallet
+                    </button>
+
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-smooth">
+                        <svg class="w-6 h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        <svg class="w-6 h-6 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="pt-16 min-h-screen">
+            <div class="p-6">
+                <!-- Hero Section -->
+                <div class="mb-8">
+                    <h1 class="text-4xl font-bold text-slate-800 dark:text-white mb-3">EIP-8004 Agent Reputation</h1>
+                    <p class="text-slate-600 dark:text-slate-400 text-lg">Register agents, make payments, and provide feedback on-chain</p>
+                </div>
+
+                <!-- Section Tabs -->
+                <div class="flex gap-4 border-b border-slate-200 dark:border-slate-700 mb-6">
+                    <button id="tab-register" class="section-tab px-6 py-3 font-semibold active" onclick="showSection('register')">
+                        Register Agent
+                    </button>
+                    <button id="tab-feedback" class="section-tab px-6 py-3 font-semibold text-slate-600 dark:text-slate-400" onclick="showSection('feedback')">
+                        Submit Feedback
+                    </button>
+                </div>
+
+                <!-- Register Section -->
+                <div id="section-register" class="section-content">
+                    <!-- Register Sub-Tabs -->
+                    <div class="flex gap-2 mb-6">
+                        <button id="register-tab-onchain" class="px-4 py-2 rounded-lg font-medium text-sm transition-smooth bg-primary text-white" onclick="showRegisterTab('onchain')">
+                            Onchain Metadata
+                        </button>
+                        <button id="register-tab-ipfs" class="px-4 py-2 rounded-lg font-medium text-sm transition-smooth bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200" onclick="showRegisterTab('ipfs')">
+                            IPFS (Pinata)
+                        </button>
+                    </div>
+
+                    <!-- Onchain Metadata Registration -->
+                    <div id="register-content-onchain" class="register-tab-content">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Left: Registration Form -->
+                            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                                <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                                    <h2 class="text-lg font-bold text-slate-800 dark:text-white">Register with Onchain Metadata</h2>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">All metadata stored directly on-chain</p>
+                                </div>
+
+                                <div class="p-6">
+                                    <form id="register-form-onchain" class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Agent Name</label>
+                                            <input type="text" id="agent-name-onchain" required placeholder="My Agent" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-smooth">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Description</label>
+                                            <textarea id="agent-description-onchain" required placeholder="Agent description..." rows="3" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-smooth"></textarea>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Image URL (optional)</label>
+                                            <input type="url" id="agent-image-onchain" placeholder="https://example.com/image.png" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-smooth">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Endpoint URL</label>
+                                            <input type="url" id="agent-endpoint-onchain" required placeholder="https://agent.example.com" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-smooth">
+                                        </div>
+
+                                        <button type="submit" class="w-full px-5 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-lg font-semibold hover:shadow-lg transition-smooth">
+                                            Register Agent (Onchain)
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Right: Registration Result -->
+                            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                                <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                                    <h2 class="text-lg font-bold text-slate-800 dark:text-white">Registration Result</h2>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Agent ID and transaction details</p>
+                                </div>
+
+                                <div id="register-result-onchain" class="p-6 hidden">
+                                    <div class="space-y-4">
+                                        <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                                            <p class="text-sm text-green-600 dark:text-green-400 mb-1 font-medium">Registration Successful!</p>
+                                            <p class="text-xs text-green-600 dark:text-green-400">Your agent has been registered on-chain</p>
+                                        </div>
+
+                                        <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-4">
+                                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">Agent ID</p>
+                                            <p id="register-agent-id-onchain" class="text-lg font-bold text-primary"></p>
+                                        </div>
+
+                                        <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-4">
+                                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">Transaction Hash</p>
+                                            <p id="register-tx-hash-onchain" class="text-sm font-mono text-slate-800 dark:text-white break-all"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="register-empty-state-onchain" class="p-6 text-center py-16">
+                                    <svg class="w-20 h-20 mx-auto text-slate-300 dark:text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    <p class="text-slate-500 dark:text-slate-400 text-sm mb-2 font-medium">
+                                        No Registration Yet
+                                    </p>
+                                    <p class="text-slate-400 dark:text-slate-500 text-xs">
+                                        Fill in the form to register your agent
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- IPFS/Pinata Registration -->
+                    <div id="register-content-ipfs" class="register-tab-content hidden">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Left: Registration Form -->
+                            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                                <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                                    <h2 class="text-lg font-bold text-slate-800 dark:text-white">Register with IPFS (Pinata)</h2>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Upload metadata to IPFS, then register with CID</p>
+                                </div>
+
+                                <div class="p-6">
+                                    <form id="register-form-ipfs" class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Pinata JWT Token</label>
+                                            <input type="password" id="pinata-jwt" required placeholder="your-pinata-jwt-token" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-smooth font-mono">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Agent Name</label>
+                                            <input type="text" id="agent-name-ipfs" required placeholder="My Agent" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-smooth">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Description</label>
+                                            <textarea id="agent-description-ipfs" required placeholder="Agent description..." rows="3" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-smooth"></textarea>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Image URL (optional)</label>
+                                            <input type="url" id="agent-image-ipfs" placeholder="https://example.com/image.png" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-smooth">
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Endpoint URL</label>
+                                            <input type="url" id="agent-endpoint-ipfs" required placeholder="https://agent.example.com" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-smooth">
+                                        </div>
+
+                                        <button type="submit" class="w-full px-5 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-lg font-semibold hover:shadow-lg transition-smooth">
+                                            Upload to IPFS & Register
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Right: Registration Result -->
+                            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                                <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                                    <h2 class="text-lg font-bold text-slate-800 dark:text-white">Registration Result</h2>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">IPFS CID and transaction details</p>
+                                </div>
+
+                                <div id="register-result-ipfs" class="p-6 hidden">
+                                    <div class="space-y-4">
+                                        <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                                            <p class="text-sm text-green-600 dark:text-green-400 mb-1 font-medium">Registration Successful!</p>
+                                            <p class="text-xs text-green-600 dark:text-green-400">Metadata uploaded to IPFS and agent registered</p>
+                                        </div>
+
+                                        <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-4">
+                                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">IPFS CID</p>
+                                            <p id="register-ipfs-cid" class="text-sm font-mono text-slate-800 dark:text-white break-all"></p>
+                                        </div>
+
+                                        <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-4">
+                                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">Agent ID</p>
+                                            <p id="register-agent-id-ipfs" class="text-lg font-bold text-primary"></p>
+                                        </div>
+
+                                        <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-4">
+                                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-1">Transaction Hash</p>
+                                            <p id="register-tx-hash-ipfs" class="text-sm font-mono text-slate-800 dark:text-white break-all"></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="register-empty-state-ipfs" class="p-6 text-center py-16">
+                                    <svg class="w-20 h-20 mx-auto text-slate-300 dark:text-slate-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    <p class="text-slate-500 dark:text-slate-400 text-sm mb-2 font-medium">
+                                        No Registration Yet
+                                    </p>
+                                    <p class="text-slate-400 dark:text-slate-500 text-xs">
+                                        Fill in the form to upload metadata and register your agent
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feedback Section -->
+                <div id="section-feedback" class="section-content hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Left: Get Feedback Auth -->
+                        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                                <h2 class="text-lg font-bold text-slate-800 dark:text-white">Get Feedback Authorization</h2>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Request authorization from agent to submit feedback</p>
+                            </div>
+
+                            <div class="p-6">
+                                <form id="feedback-auth-form" class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Agent ID</label>
+                                        <input type="number" id="feedback-agent-id" required placeholder="1" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-smooth">
+                                    </div>
+
+                                    <button type="submit" class="w-full px-5 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-lg font-semibold hover:shadow-lg transition-smooth">
+                                        Get Authorization
+                                    </button>
+                                </form>
+
+                                <div id="feedback-auth-result" class="mt-6 hidden">
+                                    <div class="bg-slate-50 dark:bg-slate-900 rounded-lg p-4">
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Feedback Authorization</p>
+                                        <pre id="feedback-auth-data" class="text-xs font-mono text-slate-800 dark:text-white whitespace-pre-wrap break-all"></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Submit Feedback -->
+                        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                            <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700">
+                                <h2 class="text-lg font-bold text-slate-800 dark:text-white">Submit Feedback Score</h2>
+                                <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Submit your feedback score on-chain</p>
+                            </div>
+
+                            <div class="p-6">
+                                <form id="feedback-submit-form" class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Score (0-100)</label>
+                                        <input type="number" id="feedback-score" min="0" max="100" required placeholder="85" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 rounded-lg border border-slate-300 dark:border-slate-600 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-smooth">
+                                    </div>
+
+                                    <button type="submit" class="w-full px-5 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-lg font-semibold hover:shadow-lg transition-smooth" disabled id="feedback-submit-btn">
+                                        Submit Feedback
+                                    </button>
+                                </form>
+
+                                <div id="feedback-submit-result" class="mt-6 hidden">
+                                    <div class="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                                        <p class="text-sm text-green-600 dark:text-green-400 mb-1 font-medium">Feedback Submitted!</p>
+                                        <p id="feedback-tx-hash" class="text-xs font-mono text-green-600 dark:text-green-400 break-all"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 lg:hidden hidden"></div>
+
+    <script>
+        // Backend API Configuration
+        const API_BASE_URL = 'http://127.0.0.1:9001';
+
+        // Global state
+        let userAddress = null;
+        let ethereum = window.ethereum;
+        let feedbackAuth = null;
+
+        // Section management
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.classList.add('hidden');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.section-tab').forEach(tab => {
+                tab.classList.remove('active', 'text-primary');
+                tab.classList.add('text-slate-600', 'dark:text-slate-400');
+            });
+
+            // Show selected section
+            document.getElementById(`section-${sectionName}`).classList.remove('hidden');
+
+            // Activate selected tab
+            const activeTab = document.getElementById(`tab-${sectionName}`);
+            activeTab.classList.add('active', 'text-primary');
+            activeTab.classList.remove('text-slate-600', 'dark:text-slate-400');
+        }
+
+        // Register sub-tab management
+        function showRegisterTab(tabName) {
+            // Hide all register tab contents
+            document.querySelectorAll('.register-tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+
+            // Remove active class from all register tabs
+            document.getElementById('register-tab-onchain').className = 'px-4 py-2 rounded-lg font-medium text-sm transition-smooth bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200';
+            document.getElementById('register-tab-ipfs').className = 'px-4 py-2 rounded-lg font-medium text-sm transition-smooth bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200';
+
+            // Show selected tab content
+            document.getElementById(`register-content-${tabName}`).classList.remove('hidden');
+
+            // Activate selected tab
+            document.getElementById(`register-tab-${tabName}`).className = 'px-4 py-2 rounded-lg font-medium text-sm transition-smooth bg-primary text-white';
+        }
+
+        // Connect Wallet
+        async function connectWallet() {
+            if (typeof window.ethereum === 'undefined') {
+                alert('Please install MetaMask or another Web3 wallet!');
+                return;
+            }
+
+            try {
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                userAddress = accounts[0];
+
+                console.log('Connected wallet:', userAddress);
+
+                const walletBtn = document.getElementById('connect-wallet-btn');
+                const walletStatus = document.getElementById('wallet-status');
+                const walletAddressEl = document.getElementById('wallet-address');
+
+                walletBtn.classList.add('hidden');
+                walletStatus.classList.remove('hidden');
+                walletStatus.classList.add('flex');
+                walletAddressEl.textContent = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
+
+                ethereum.on('accountsChanged', function (accounts) {
+                    if (accounts.length === 0) {
+                        userAddress = null;
+                        walletBtn.classList.remove('hidden');
+                        walletStatus.classList.add('hidden');
+                    } else {
+                        userAddress = accounts[0];
+                        walletAddressEl.textContent = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
+                    }
+                });
+
+            } catch (error) {
+                console.error('Error connecting wallet:', error);
+                alert('Failed to connect wallet: ' + error.message);
+            }
+        }
+
+        // Register Agent Form (Onchain Metadata)
+        document.getElementById('register-form-onchain').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!userAddress) {
+                alert('Please connect your wallet first!');
+                return;
+            }
+
+            const name = document.getElementById('agent-name-onchain').value;
+            const description = document.getElementById('agent-description-onchain').value;
+            const image = document.getElementById('agent-image-onchain').value || '';
+            const endpoint = document.getElementById('agent-endpoint-onchain').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/8004/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name,
+                        description,
+                        image,
+                        endpoint,
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.errorReason || `Server returned ${response.status}`);
+                }
+
+                // Show result
+                document.getElementById('register-empty-state-onchain').classList.add('hidden');
+                document.getElementById('register-result-onchain').classList.remove('hidden');
+                document.getElementById('register-agent-id-onchain').textContent = data.agentId || 'N/A';
+                document.getElementById('register-tx-hash-onchain').textContent = data.txHash || 'N/A';
+
+                alert('Agent registered successfully! Agent ID: ' + data.agentId);
+            } catch (error) {
+                console.error('Error registering agent:', error);
+                alert('Failed to register agent: ' + error.message);
+            }
+        });
+
+        // Register Agent Form (IPFS/Pinata)
+        document.getElementById('register-form-ipfs').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!userAddress) {
+                alert('Please connect your wallet first!');
+                return;
+            }
+
+            const pinataJWT = document.getElementById('pinata-jwt').value;
+            const name = document.getElementById('agent-name-ipfs').value;
+            const description = document.getElementById('agent-description-ipfs').value;
+            const image = document.getElementById('agent-image-ipfs').value || '';
+            const endpoint = document.getElementById('agent-endpoint-ipfs').value;
+
+            try {
+                // Step 1: Upload metadata to IPFS via Pinata
+                const metadata = {
+                    name,
+                    description,
+                    image,
+                    endpoint
+                };
+
+                const pinataResponse = await fetch('https://api.pinata.cloud/pinning/pinJSONToIPFS', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${pinataJWT}`
+                    },
+                    body: JSON.stringify({
+                        pinataContent: metadata,
+                        pinataMetadata: {
+                            name: `${name}-metadata`
+                        }
+                    })
+                });
+
+                if (!pinataResponse.ok) {
+                    const errorData = await pinataResponse.json();
+                    throw new Error(`Failed to upload to Pinata: ${errorData.error || pinataResponse.statusText}`);
+                }
+
+                const pinataData = await pinataResponse.json();
+                const ipfsCID = pinataData.IpfsHash;
+
+                console.log('Uploaded to IPFS, CID:', ipfsCID);
+
+                // Step 2: Register agent with IPFS CID
+                const response = await fetch(`${API_BASE_URL}/8004/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        metadata_uri: `ipfs://${ipfsCID}`,
+                        endpoint,
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.errorReason || `Server returned ${response.status}`);
+                }
+
+                // Show result
+                document.getElementById('register-empty-state-ipfs').classList.add('hidden');
+                document.getElementById('register-result-ipfs').classList.remove('hidden');
+                document.getElementById('register-ipfs-cid').textContent = ipfsCID;
+                document.getElementById('register-agent-id-ipfs').textContent = data.agentId || 'N/A';
+                document.getElementById('register-tx-hash-ipfs').textContent = data.txHash || 'N/A';
+
+                alert(`Agent registered successfully! Agent ID: ${data.agentId}, IPFS CID: ${ipfsCID}`);
+            } catch (error) {
+                console.error('Error registering agent with IPFS:', error);
+                alert('Failed to register agent: ' + error.message);
+            }
+        });
+
+        // Get Feedback Auth Form
+        document.getElementById('feedback-auth-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!userAddress) {
+                alert('Please connect your wallet first!');
+                return;
+            }
+
+            const agentId = document.getElementById('feedback-agent-id').value;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/8004/feedback-auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        agentId: parseInt(agentId),
+                        clientAddress: userAddress,
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.errorReason || `Server returned ${response.status}`);
+                }
+
+                feedbackAuth = data.feedbackAuth;
+
+                // Show result
+                document.getElementById('feedback-auth-result').classList.remove('hidden');
+                document.getElementById('feedback-auth-data').textContent = JSON.stringify(data, null, 2);
+
+                // Enable submit button
+                document.getElementById('feedback-submit-btn').disabled = false;
+
+                alert('Feedback authorization received!');
+            } catch (error) {
+                console.error('Error getting feedback auth:', error);
+                alert('Failed to get feedback auth: ' + error.message);
+            }
+        });
+
+        // Submit Feedback Form
+        document.getElementById('feedback-submit-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!userAddress) {
+                alert('Please connect your wallet first!');
+                return;
+            }
+
+            if (!feedbackAuth) {
+                alert('Please get feedback authorization first!');
+                return;
+            }
+
+            const score = parseInt(document.getElementById('feedback-score').value);
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/8004/feedback`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        feedbackAuth: feedbackAuth,
+                        score: score,
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.errorReason || `Server returned ${response.status}`);
+                }
+
+                // Show result
+                document.getElementById('feedback-submit-result').classList.remove('hidden');
+                document.getElementById('feedback-tx-hash').textContent = data.txHash || 'N/A';
+
+                alert('Feedback submitted successfully!');
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('Failed to submit feedback: ' + error.message);
+            }
+        });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        themeToggle.addEventListener('click', () => {
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                html.classList.add('light');
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+            }
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebar-overlay');
+        const mainContent = document.getElementById('main-content');
+        const topbar = document.getElementById('topbar');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            sidebarOverlay.classList.add('hidden');
+        });
+
+        // Responsive Sidebar
+        function handleResize() {
+            if (window.innerWidth < 1024) {
+                sidebar.classList.add('-translate-x-full');
+                mainContent.classList.remove('ml-60');
+                topbar.classList.remove('left-60');
+            } else {
+                sidebar.classList.remove('-translate-x-full');
+                mainContent.classList.add('ml-60');
+                topbar.classList.add('left-60');
+                sidebarOverlay.classList.add('hidden');
+            }
+        }
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+    </script>
+
+</body>
+</html>
