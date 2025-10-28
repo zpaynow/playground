@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="wallet-connector.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -555,9 +556,10 @@
         // Backend API Configuration
         const API_BASE_URL = '';
 
-        // Global state
-        let userAddress = null;
-        let ethereum = window.ethereum;
+        // Wallet connector callbacks
+        walletConnector.onConnect((address, provider) => {
+            console.log('Wallet connected:', address);
+        });
 
         // Section management
         function showSection(sectionName) {
@@ -599,56 +601,18 @@
             document.getElementById(`register-tab-${tabName}`).className = 'px-4 py-2 rounded-lg font-medium text-sm transition-smooth bg-primary text-white';
         }
 
-        // Connect Wallet
-        async function connectWallet() {
-            if (typeof window.ethereum === 'undefined') {
-                alert('Please install MetaMask or another Web3 wallet!');
-                return;
-            }
-
-            try {
-                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                userAddress = accounts[0];
-
-                console.log('Connected wallet:', userAddress);
-
-                const walletBtn = document.getElementById('connect-wallet-btn');
-                const walletStatus = document.getElementById('wallet-status');
-                const walletAddressEl = document.getElementById('wallet-address');
-
-                walletBtn.classList.add('hidden');
-                walletStatus.classList.remove('hidden');
-                walletStatus.classList.add('flex');
-                walletAddressEl.textContent = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
-
-                ethereum.on('accountsChanged', function (accounts) {
-                    if (accounts.length === 0) {
-                        userAddress = null;
-                        walletBtn.classList.remove('hidden');
-                        walletStatus.classList.add('hidden');
-                    } else {
-                        userAddress = accounts[0];
-                        walletAddressEl.textContent = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
-                    }
-                });
-
-            } catch (error) {
-                console.error('Error connecting wallet:', error);
-                alert('Failed to connect wallet: ' + error.message);
-            }
-        }
 
         // Register Agent Form (Onchain Metadata)
         document.getElementById('register-form-onchain').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            if (!userAddress) {
+            if (!walletConnector.isConnected()) {
                 alert('Please connect your wallet first!');
-                await connectWallet();
-                if (!userAddress) {
-                    return;
-                }
+                connectWallet();
+                return;
             }
+
+            const userAddress = walletConnector.getAddress();
 
             // Check if ethers is loaded
             if (typeof ethers === 'undefined') {
@@ -805,13 +769,13 @@
         document.getElementById('register-form-ipfs').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            if (!userAddress) {
+            if (!walletConnector.isConnected()) {
                 alert('Please connect your wallet first!');
-                await connectWallet();
-                if (!userAddress) {
-                    return;
-                }
+                connectWallet();
+                return;
             }
+
+            const userAddress = walletConnector.getAddress();
 
             // Check if ethers is loaded
             if (typeof ethers === 'undefined') {
@@ -1041,13 +1005,14 @@
             }
 
             // Check wallet connection
-            if (!userAddress) {
+            if (!walletConnector.isConnected()) {
                 alert('Please connect your wallet first!');
-                await connectWallet();
-                if (!userAddress) {
-                    return;
-                }
+                connectWallet();
+                return;
             }
+
+            const userAddress = walletConnector.getAddress();
+            const ethereum = walletConnector.getProvider();
 
             if (!feedbackPaymentOptions) {
                 alert('Please get payment options first');

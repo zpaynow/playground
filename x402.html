@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="wallet-connector.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -378,8 +379,11 @@
         };
         let paymentOptions = null;
         let selectedPaymentIndex = 0;
-        let userAddress = null;
-        let ethereum = window.ethereum;
+
+        // Wallet connector callbacks
+        walletConnector.onConnect((address, provider) => {
+            console.log('Wallet connected:', address);
+        });
 
         // Product selection
         function selectProduct(id, name, price) {
@@ -540,49 +544,6 @@
             });
         }
 
-        // Connect Wallet
-        async function connectWallet() {
-            if (typeof window.ethereum === 'undefined') {
-                alert('Please install MetaMask or another Web3 wallet!');
-                return;
-            }
-
-            try {
-                // Request account access
-                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-                userAddress = accounts[0];
-
-                console.log('Connected wallet:', userAddress);
-
-                // Update UI
-                const walletBtn = document.getElementById('connect-wallet-btn');
-                const walletStatus = document.getElementById('wallet-status');
-                const walletAddressEl = document.getElementById('wallet-address');
-
-                walletBtn.classList.add('hidden');
-                walletStatus.classList.remove('hidden');
-                walletStatus.classList.add('flex');
-                walletAddressEl.textContent = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
-
-                // Listen for account changes
-                ethereum.on('accountsChanged', function (accounts) {
-                    if (accounts.length === 0) {
-                        // Wallet disconnected
-                        userAddress = null;
-                        walletBtn.classList.remove('hidden');
-                        walletStatus.classList.add('hidden');
-                    } else {
-                        userAddress = accounts[0];
-                        walletAddressEl.textContent = userAddress.substring(0, 6) + '...' + userAddress.substring(38);
-                    }
-                });
-
-            } catch (error) {
-                console.error('Error connecting wallet:', error);
-                alert('Failed to connect wallet: ' + error.message);
-            }
-        }
-
         // Sign button handler
         document.getElementById('sign-btn').addEventListener('click', async function() {
             // Prevent duplicate clicks if already processing
@@ -590,13 +551,14 @@
                 return;
             }
             // Check wallet connection
-            if (!userAddress) {
+            if (!walletConnector.isConnected()) {
                 alert('Please connect your wallet first!');
-                await connectWallet();
-                if (!userAddress) {
-                    return;
-                }
+                connectWallet();
+                return;
             }
+
+            const userAddress = walletConnector.getAddress();
+            const ethereum = walletConnector.getProvider();
 
             if (!paymentOptions || selectedPaymentIndex === null) {
                 alert('Please select a payment option first');
