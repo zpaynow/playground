@@ -1,0 +1,16 @@
+/target
+Cargo.lock
+.env
+.idea
+.vscode
+scan_block
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Cloudflare Workers
+.dev.vars
+.wrangler/
+dist/
