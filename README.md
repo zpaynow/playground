@@ -4,18 +4,49 @@ A modern, developer-focused frontend interface for the ZPayNow crypto payment ga
 
 ## Quick Start
 
-Simply open `index.html` in your browser:
+### Local Development
+
+The project is deployed using Cloudflare Workers. For local development:
 
 ```bash
-open index.html
-# or
-python3 -m http.server 8000
-# then visit http://localhost:8000
+# Install dependencies
+npm install
+
+# Start local development server
+npx wrangler dev
+
+# Visit http://localhost:8787
 ```
+
+### Deployment
+
+```bash
+# Deploy to Cloudflare Workers
+npx wrangler deploy
+```
+
+### Configuration
+
+Edit `wrangler.toml` to configure your deployment:
+
+```toml
+name = "zpaynow-playground-server"
+main = "index.js"
+compatibility_date = "2024-03-20"
+
+[vars]
+APIKEY = "your-apikey"
+SERVICE = "https://api.zpaynow.com"
+```
+
+**Environment Variables:**
+- `APIKEY`: Your ZPayNow API key for authenticating with the payment service
+- `SERVICE`: ZPayNow API service endpoint (default: https://api.zpaynow.com)
 
 ## Features
 
-### Current Implementation (Phase 1: UI Layout)
+### Current Implementation
+**UI Components:**
 - Modern dashboard layout with fixed sidebar and top bar
 - Two-column playground interface (Request Builder + Response Viewer)
 - Protocol selector tabs (x402 / 8004)
@@ -25,6 +56,15 @@ python3 -m http.server 8000
 - Fully responsive (mobile-friendly)
 - Glassmorphism effects
 - Smooth animations and transitions
+
+**Backend Integration:**
+- Cloudflare Workers serverless architecture
+- ZPayNow API integration for payment processing
+- x402 protocol support (requirements & payments)
+- Payment session management
+- Webhook handling
+- CORS-enabled API endpoints
+- Static asset serving with Cloudflare Workers Assets
 
 ### Design Highlights
 - **Color Scheme**: Teal accent (#0ea5a4) with balanced light/dark palettes
@@ -36,7 +76,12 @@ python3 -m http.server 8000
 
 ```
 /playground
-├── index.html       # Main prototype (open this in browser)
+├── index.js         # Cloudflare Worker (API proxy + static file serving)
+├── wrangler.toml    # Cloudflare Workers configuration
+├── package.json     # Dependencies
+├── payment.html     # Payment UI (default route)
+├── x402.html        # x402 Protocol playground
+├── 8004.html        # 8004 Protocol playground
 ├── DESIGN.md        # Complete design system documentation
 └── README.md        # This file
 ```
@@ -88,23 +133,24 @@ All customization can be done directly in `index.html`:
 
 ## Next Phases
 
-### Phase 2: Interactivity (Planned)
+### Phase 2: Enhanced Interactivity (Planned)
 - Live JSON editing with validation
-- Mock API requests
 - Real-time status updates
-- Form handling
+- Enhanced form handling
+- Transaction history UI
 
-### Phase 3: Integration (Planned)
-- x402/8004 protocol implementation
-- Wallet connection (MetaMask, WalletConnect)
-- Backend API integration
-- Transaction history
-
-### Phase 4: Advanced Features (Planned)
-- Additional protocol support
+### Phase 3: Advanced Features (Planned)
+- Enhanced wallet connection (MetaMask, WalletConnect)
+- Additional protocol support (8004 full implementation)
 - Template library
 - Code generation
 - Export/import configurations
+
+### Phase 4: Developer Tools (Planned)
+- API testing suite
+- Webhook testing
+- Analytics dashboard
+- Developer documentation portal
 
 ## Documentation
 
@@ -125,24 +171,52 @@ See `DESIGN.md` for complete design system documentation including:
 
 ## Technology Stack
 
+### Frontend
 - **TailwindCSS 3.x**: Utility-first CSS framework (CDN)
 - **Google Fonts**: Inter + Roboto Mono
 - **Vanilla JavaScript**: Theme toggle and mobile menu
 - **HTML5**: Semantic markup
 
+### Backend
+- **Cloudflare Workers**: Serverless edge computing platform
+- **Cloudflare Workers Assets**: Static file hosting
+- **ZPayNow API**: Payment processing backend
+
+## Backend Architecture
+
+The Cloudflare Worker serves as both a static file server and an API proxy:
+
+### API Endpoints
+
+**Payment Session Management:**
+- `POST /products` - Create a payment session for a product
+- `GET /sessions/:id` - Fetch payment session status
+- `POST /webhook` - Handle payment webhooks
+
+**x402 Protocol:**
+- `POST /x402/requirements` - Get payment requirements
+- `POST /x402/payments` - Submit payment
+
+**UI Routes:**
+- `/` - Payment interface (payment.html)
+- `/x402` - x402 Protocol playground (x402.html)
+- `/8004` - 8004 Protocol playground (8004.html)
+
+All API endpoints include CORS headers for cross-origin requests.
+
 ## No Build Required
 
-This prototype uses CDN-based TailwindCSS and requires no build process. It's ready for immediate viewing and integration into any framework (React, Vue, vanilla JS, etc.).
+The frontend uses CDN-based TailwindCSS and requires no build process. The Cloudflare Worker is deployed as-is with Wrangler CLI.
 
 ## Status
 
-**Version**: 1.0.0 Beta
-**Phase**: UI Layout & Visual Style (Complete)
-**Backend**: Not yet integrated
-**Interactivity**: Placeholder only
+**Version**: 2.0.0
+**Phase**: Backend Integration (Complete)
+**Backend**: Cloudflare Worker with ZPayNow API proxy
+**Deployment**: Production-ready on Cloudflare Workers
 
 ---
 
-**Note**: This is a static UI prototype. All buttons, forms, and interactions are visual placeholders. No actual payment processing or blockchain integration is implemented yet.
+**Note**: The application is now fully integrated with the ZPayNow API for payment processing. The Cloudflare Worker handles API routing, CORS, and static file serving.
 
 For questions or feedback, please refer to the design documentation in `DESIGN.md`.
